@@ -1,17 +1,25 @@
 package workshop;
 
-public class Fizzbuzz {
-    public static String fizzbuzzOrNumber(int number){
 
-        if(number % 15 == 0){
+public class Fizzbuzz {
+    public String fizzbuzzOrNumber(int number){
+
+        if(isModulusZero(number, 15)){
             return "FizzBuzz";
-        } else if (number % 3 == 0) {
+        } else if (isModulusZero(number, 3)) {
             return "Fizz";
-        } else if (number % 5 == 0) {
+        } else if (isModulusZero(number, 5)) {
             return "Buzz";
         }
         else
             return String.valueOf(number);
     }
+    
+    public boolean isModulusZero(int number, int divisor ){
+        if(number%divisor == 0)
+            return true;
+        else return false;
+    }
 }
+
 
