@@ -36,15 +36,17 @@ public class TriviaGame {
 
     public boolean add(String playerName) {
 
-
         players.add(playerName);
-        places[howManyPlayers()] = 0;
-        purses[howManyPlayers()] = 0;
+        addPlayers(howManyPlayers());
         inPenaltyBox[howManyPlayers()] = false;
-
         announce(playerName + " was added");
-        announce("They are player number " + players.size());
+        announce("They are player number " + howManyPlayers());
         return true;
+    }
+
+    private void addPlayers(int index){
+        places[index] = 0;
+        purses [index] = 0;
     }
 
     public int howManyPlayers() {
@@ -56,12 +58,15 @@ public class TriviaGame {
         announce("They have rolled a " + roll);
 
         if (inPenaltyBox[currentPlayer]) {
-            if (roll % 2 != 0) {
+            if (isOdd(roll)) {
                 isGettingOutOfPenaltyBox = true;
 
                 announce(players.get(currentPlayer) + " is getting out of the penalty box");
-                places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+
+                addPlacesAndRoll(roll);
+
+                if (isPlayerNumberGreaterThanEleven(places[currentPlayer]))
+                    setPlaces();
 
                 announce(players.get(currentPlayer)
                         + "'s new location is "
@@ -75,8 +80,8 @@ public class TriviaGame {
 
         } else {
 
-            places[currentPlayer] = places[currentPlayer] + roll;
-            if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+            addPlacesAndRoll(roll);
+            if (isPlayerNumberGreaterThanEleven(places[currentPlayer])) setPlaces();
 
             announce(players.get(currentPlayer)
                     + "'s new location is "
@@ -85,6 +90,21 @@ public class TriviaGame {
             askQuestion();
         }
 
+    }
+    private void setPlaces(){
+        places[currentPlayer] = places[currentPlayer] - 12;
+    }
+    private boolean isPlayerNumberGreaterThanEleven(int playerNumber){
+        if(playerNumber > 11) return true;
+        else return false;
+    }
+    private boolean isOdd(int number){
+        if(number % 2 == 0)
+            return true;
+        else return false;
+    }
+    private void addPlacesAndRoll(int roll){
+        places[currentPlayer] = places[currentPlayer] + roll;
     }
 
     private void askQuestion() {
@@ -100,36 +120,50 @@ public class TriviaGame {
 
 
     private String currentCategory() {
-        if (places[currentPlayer] == 0) return "Pop";
-        if (places[currentPlayer] == 4) return "Pop";
-        if (places[currentPlayer] == 8) return "Pop";
-        if (places[currentPlayer] == 1) return "Science";
-        if (places[currentPlayer] == 5) return "Science";
-        if (places[currentPlayer] == 9) return "Science";
-        if (places[currentPlayer] == 2) return "Sports";
-        if (places[currentPlayer] == 6) return "Sports";
-        if (places[currentPlayer] == 10) return "Sports";
-        return "Rock";
+        if (checkPopCategory()) return "Pop";
+        else if (checkScienceCategory()) return "Science";
+        else if (checkSportsCategory()) return "Sports";
+         else return "Rock";
     }
+
+    private boolean checkPopCategory(){
+        if(places[currentPlayer]%4 == 0)
+            return true;
+        else return false;
+    }
+
+    private boolean checkScienceCategory(){
+        if(places[currentPlayer]%4 == 1)
+            return true;
+        else return false;
+    }
+
+    private boolean checkSportsCategory(){
+        if(places[currentPlayer]%4 == 2)
+            return true;
+        else return false;
+    }
+
 
     public boolean wasCorrectlyAnswered() {
         if (inPenaltyBox[currentPlayer]) {
             if (isGettingOutOfPenaltyBox) {
                 announce("Answer was correct!!!!");
-                purses[currentPlayer]++;
+                increasePurseCount();
                 announce(players.get(currentPlayer)
                         + " now has "
                         + purses[currentPlayer]
                         + " Gold Coins.");
 
                 boolean winner = didPlayerWin();
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
-
+                incrementCurrentPlayerCount();
+                if(checkPlayerNumberAndSize()) 
+                    makeCurrentPlayerEqualsZero();
                 return winner;
             } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
+                incrementCurrentPlayerCount();
+                if (checkPlayerNumberAndSize()) 
+                    makeCurrentPlayerEqualsZero();
                 return true;
             }
 
@@ -137,18 +171,36 @@ public class TriviaGame {
         } else {
 
             announce("Answer was correct!!!!");
-            purses[currentPlayer]++;
+            increasePurseCount();
             announce(players.get(currentPlayer)
                     + " now has "
                     + purses[currentPlayer]
                     + " Gold Coins.");
 
             boolean winner = didPlayerWin();
-            currentPlayer++;
-            if (currentPlayer == players.size()) currentPlayer = 0;
+            incrementCurrentPlayerCount();
+            if (checkPlayerNumberAndSize()) makeCurrentPlayerEqualsZero();
 
             return winner;
         }
+    }
+
+    private void increasePurseCount() {
+        purses[currentPlayer]++;
+    }
+
+    private boolean checkPlayerNumberAndSize(){
+        if (currentPlayer == howManyPlayers())
+            return true;
+        else return false;
+    }
+    
+    public void makeCurrentPlayerEqualsZero(){
+        currentPlayer = 0;
+    }
+    
+    public void incrementCurrentPlayerCount(){
+        currentPlayer++;
     }
 
     public boolean wrongAnswer() {
@@ -156,8 +208,8 @@ public class TriviaGame {
         announce(players.get(currentPlayer) + " was sent to the penalty box");
         inPenaltyBox[currentPlayer] = true;
 
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        incrementCurrentPlayerCount();
+        if (checkPlayerNumberAndSize()) makeCurrentPlayerEqualsZero();
         return true;
     }
 
