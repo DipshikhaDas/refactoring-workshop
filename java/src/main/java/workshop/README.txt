@@ -10,5 +10,6 @@
 - changed the pushACharacterToTheOutput() a little bit and used it inside the if else statement in basicHtmlCode()
 - removed the method stashNextCharacterAndAdvanceThePointer() because of the change in logic in basicHtmlCode()
 
-3. 
+3. In TrivialGame
+- has created several new methods addPlayers(int index), setPlaces(), isPlayerNumberGreaterThanEleven(int playerNumber), isOdd(int number), addPlacesAndRoll(int roll), checkPopCategory(), checkScienceCategory(), checkSportsCategory(), increasePurseCount(), checkPlayerNumberAndSize(), makeCurrentPlayerEqualsZero(), incrementCurrentPlayerCount() to increase readibilty and to avoid duplicate code. 
 
