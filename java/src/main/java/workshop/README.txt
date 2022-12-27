@@ -5,4 +5,10 @@
 - removed the temporary variable "strReturn" because we can return the string directly without making that temp variable.
 
 2. In PlaintextToHtmlConverter :
+- has removed the temporary variable used in toHtml() method
+- has changed the switch statement in basicHtml() and changed the logic here to make it more understandable
+- changed the pushACharacterToTheOutput() a little bit and used it inside the if else statement in basicHtmlCode()
+- removed the method stashNextCharacterAndAdvanceThePointer() because of the change in logic in basicHtmlCode()
+
+3. 
 
