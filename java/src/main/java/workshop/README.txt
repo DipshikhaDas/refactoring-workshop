@@ -4,4 +4,5 @@
 - changed the logic to make it simpler.
 - removed the temporary variable "strReturn" because we can return the string directly without making that temp variable.
 
-2.
+2. In PlaintextToHtmlConverter :
+
